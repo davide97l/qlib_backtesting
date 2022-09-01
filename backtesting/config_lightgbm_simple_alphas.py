@@ -32,8 +32,10 @@ data_handler_config = {
             "config": {
                 # all alphas operators: https://github.com/microsoft/qlib/blob/main/qlib/data/ops.py
                 "feature": {
-                    ("Resi($close, 15)/$close", "Std(Abs($close/Ref($close, 1)-1)*$volume, 5)/(Mean(Abs($close/Ref($close, 1)-1)*$volume, 5)+1e-12)", "Rsquare($close, 5)", "($high-$low)/$open", "Rsquare($close, 10)", "Corr($close, Log($volume+1), 5)", "Corr($close/Ref($close,1), Log($volume/Ref($volume, 1)+1), 5)", "Corr($close, Log($volume+1), 10)", "Rsquare($close, 20)", "Corr($close/Ref($close,1), Log($volume/Ref($volume, 1)+1), 60)", "Corr($close/Ref($close,1), Log($volume/Ref($volume, 1)+1), 10)", "Corr($close, Log($volume+1), 20)", "(Less($open, $close)-$low)/$open"),
-                    ("RESI5", "WVMA5", "RSQR5", "KLEN", "RSQR10", "CORR5", "CORD5", "CORR10", "RSQR20", "CORD60", "CORD10", "CORR20", "KLOW"),
+                    ("$close", "$open", "$high", "$low", "$volume",
+                     "Ref($close, -2)", "Ref($close, -1)", "Mean($close, 7)", "$high-$low",  "$close-$open",
+                     "'(EMA($close, 12) - EMA($close, 26))/$close - EMA((EMA($close, 12) - EMA($close, 26))/$close, 9)/$close'"),  # MACD
+                    ("CLOSE", "OPEN", "HIGH", "LOW", "VOLUME", "CLOSE2", "CLOSE1", "MEAN7", "HILO", "CLOP", "MACD"),
                 },
                 "label": {
                     ("Ref($close, -2)/Ref($close, -1) - 1"),
@@ -43,6 +45,12 @@ data_handler_config = {
             },
         },
     },
+    #'learn_processors': [
+        #{"class": "ProcessInf", "kwargs": {}},
+        #{"class": "ZScoreNorm", "kwargs": {}},
+        #{"class": "Fillna", "kwargs": {}},
+        #{"class": "DropnaLabel", "kwargs": {}},
+    #]
 }
 task = {
     "model": {
