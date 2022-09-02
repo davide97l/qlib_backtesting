@@ -1,18 +1,7 @@
-from qlib.contrib.model.gbdt import LGBModel
-from qlib.contrib.data.handler import Alpha158
-from qlib.utils import init_instance_by_config, flatten_dict
-from qlib.workflow import R
-from qlib.workflow.record_temp import SignalRecord, PortAnaRecord, SigAnaRecord
 import qlib
-import pandas as pd
-from qlib.contrib.strategy import TopkDropoutStrategy
-from qlib.contrib.evaluate import (
-    backtest_daily as normal_backtest,
-    risk_analysis,
-)
-from qlib.contrib.report import analysis_model, analysis_position
 from qlib.data.dataset.loader import QlibDataLoader
 from qlib.data.dataset.processor import ZScoreNorm, Fillna, CSZScoreNorm, DropnaLabel
+from qlib.data.dataset import DataHandlerLP
 
 market = "csi300"  # or csi500
 benchmark = "SH000300"  # must be one of the codes included in the market
@@ -23,32 +12,18 @@ test = ["2017-01-01", "2020-08-01"]
 data_handler_config = {
     "start_time": train[0],
     "end_time": test[1],
-    "fit_start_time": train[0],
-    "fit_end_time": train[1],
     "instruments": market,
     "data_loader": {
         "class": QlibDataLoader,
         "kwargs": {
             "config": {
                 # all alphas operators: https://github.com/microsoft/qlib/blob/main/qlib/data/ops.py
-                "feature": {
-                    ("Resi($close, 15)/$close", "Std(Abs($close/Ref($close, 1)-1)*$volume, 5)/(Mean(Abs($close/Ref($close, 1)-1)*$volume, 5)+1e-12)", "Rsquare($close, 5)", "($high-$low)/$open", "Rsquare($close, 10)", "Corr($close, Log($volume+1), 5)", "Corr($close/Ref($close,1), Log($volume/Ref($volume, 1)+1), 5)", "Corr($close, Log($volume+1), 10)", "Rsquare($close, 20)", "Corr($close/Ref($close,1), Log($volume/Ref($volume, 1)+1), 60)", "Corr($close/Ref($close,1), Log($volume/Ref($volume, 1)+1), 10)", "Corr($close, Log($volume+1), 20)", "(Less($open, $close)-$low)/$open"),
-                    ("RESI5", "WVMA5", "RSQR5", "KLEN", "RSQR10", "CORR5", "CORD5", "CORR10", "RSQR20", "CORD60", "CORD10", "CORR20", "KLOW"),
-                },
-                "label": {
-                    ("Ref($close, -2)/Ref($close, -1) - 1"),
-                    ("LABEL0"),
+                "feature": [["$close", "$open", "$high", "$low", "$volume"], ['CLOSE', 'OPEN', 'HIGH', 'LOW', 'VOLUME']],
+                "label": [["Ref($close, -2)/Ref($close, -1) - 1"], ['LABEL0']],
                 },
             "freq": "day",
             },
         },
-    },
-    #'learn_processors': [
-        #{"class": "ProcessInf", "kwargs": {}},
-        #{"class": "ZScoreNorm", "kwargs": {}},
-        #{"class": "Fillna", "kwargs": {}},
-        #{"class": "DropnaLabel", "kwargs": {}},
-    #]
 }
 task = {
     "model": {
@@ -71,8 +46,8 @@ task = {
         "module_path": "qlib.data.dataset",
         "kwargs": {
             "handler": {
-                "class": "Alpha158",
-                "module_path": "qlib.contrib.data.handler",
+                'class': DataHandlerLP,
+                "module_path": qlib.data.dataset.handler,
                 "kwargs": data_handler_config,
             },
             "segments": {

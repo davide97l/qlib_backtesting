@@ -12,7 +12,6 @@ from qlib.contrib.evaluate import (
 )
 from qlib.contrib.report import analysis_model, analysis_position
 from qlib.data.dataset.loader import QlibDataLoader
-from qlib.data.dataset import DataHandlerLP
 from qlib.data.dataset.processor import ZScoreNorm, Fillna, CSZScoreNorm, DropnaLabel
 
 market = "csi300"  # or csi500
@@ -24,30 +23,9 @@ test = ["2017-01-01", "2020-08-01"]
 data_handler_config = {
     "start_time": train[0],
     "end_time": test[1],
+    "fit_start_time": train[0],
+    "fit_end_time": train[1],
     "instruments": market,
-    "data_loader": {
-        "class": QlibDataLoader,
-        "kwargs": {
-            "config": {
-                # all alphas operators: https://github.com/microsoft/qlib/blob/main/qlib/data/ops.py
-                "feature": [
-                    ["$close", "$open", "$high", "$low", "$volume",
-                     "Ref($close, -2)", "Ref($close, -1)", "Mean($close, 7)", "$high-$low",  "$close-$open",
-                     "(EMA($close, 12) - EMA($close, 26))/$close - EMA((EMA($close, 12) - EMA($close, 26))/$close, 9)/$close"],  # MACD
-                    ["CLOSE", "OPEN", "HIGH", "LOW", "VOLUME", "CLOSE2", "CLOSE1", "MEAN7", "HILO", "CLOP", "MACD"],
-                ],
-                "label": [["Ref($close, -2)/Ref($close, -1) - 1"], ['LABEL0']],
-                },
-            "freq": "day",
-        },
-    },
-    #'learn_processors': [
-    #    {"class": "ProcessInf", "kwargs": {}},
-    #    {"class": "ZScoreNorm", "kwargs": {"fit_start_time": train[0],
-    #"fit_end_time": train[1],}},
-    #    {"class": "Fillna", "kwargs": {}},
-    #    {"class": "DropnaLabel", "kwargs": {}},
-    #]
 }
 task = {
     "model": {
@@ -70,8 +48,8 @@ task = {
         "module_path": "qlib.data.dataset",
         "kwargs": {
             "handler": {
-                'class': DataHandlerLP,
-                "module_path": qlib.data.dataset.handler,
+                "class": "Alpha158",
+                "module_path": "qlib.contrib.data.handler",
                 "kwargs": data_handler_config,
             },
             "segments": {
