@@ -49,3 +49,9 @@ If you need to define your personalized alphas, you can simply add the alphas' f
 ],
 ```
 For more information you can refer [here](https://qlib.readthedocs.io/en/latest/advanced/alpha.html#example).
+
+## Benchmark
+
+Qlib already provides to [baselines](https://qlib.readthedocs.io/en/latest/component/data.html#qlib-format-data):
+- [Alphas158](https://github.com/microsoft/qlib/blob/main/qlib/contrib/data/handler.py#L140): ([report](data_example/report_config_lightgbm_alphas158_csi500.html))
+- [Alphas360](https://github.com/microsoft/qlib/blob/main/qlib/contrib/data/handler.py#L47)

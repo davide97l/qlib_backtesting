@@ -83,3 +83,4 @@ if __name__ == '__main__':
     with open(report_name, 'w') as f:
         for r in plots:
             f.write(r.to_html(full_html=False, include_plotlyjs='cdn'))
+    print('Report saved to:', report_name)
