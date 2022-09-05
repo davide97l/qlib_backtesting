@@ -1,10 +1,5 @@
-import qlib
-from qlib.data.dataset.loader import QlibDataLoader
-from qlib.data.dataset.processor import ZScoreNorm, Fillna, CSZScoreNorm, DropnaLabel
-from qlib.data.dataset import DataHandlerLP
-
-market = "csi500"  # or csi300
-benchmark = "SH000905"  # must be one of the codes included in the market
+market = "csi300"  # or csi500
+benchmark = "SH000300"  # must be one of the codes included in the market
 train = ["2008-01-01", "2014-12-31"]
 valid = ["2015-01-01", "2016-12-31"]
 test = ["2017-01-01", "2020-08-01"]
@@ -12,18 +7,9 @@ test = ["2017-01-01", "2020-08-01"]
 data_handler_config = {
     "start_time": train[0],
     "end_time": test[1],
+    "fit_start_time": train[0],
+    "fit_end_time": train[1],
     "instruments": market,
-    "data_loader": {
-        "class": QlibDataLoader,
-        "kwargs": {
-            "config": {
-                # all alphas operators: https://github.com/microsoft/qlib/blob/main/qlib/data/ops.py
-                "feature": [["$close", "$open", "$high", "$low", "$volume"], ['CLOSE', 'OPEN', 'HIGH', 'LOW', 'VOLUME']],
-                "label": [["Ref($close, -2)/Ref($close, -1) - 1"], ['LABEL0']],
-                },
-            "freq": "day",
-            },
-        },
 }
 task = {
     "model": {
@@ -46,8 +32,8 @@ task = {
         "module_path": "qlib.data.dataset",
         "kwargs": {
             "handler": {
-                'class': DataHandlerLP,
-                "module_path": qlib.data.dataset.handler,
+                "class": "Alpha158",
+                "module_path": "qlib.contrib.data.handler",
                 "kwargs": data_handler_config,
             },
             "segments": {

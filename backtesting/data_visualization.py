@@ -5,7 +5,7 @@ from pandas_profiling import ProfileReport
 import argparse
 
 # usage example: 
-# python backtesting/data_visualization.py --config backtesting/config_lightgbm_cohlv.py --SH600000
+# python backtesting/data_visualization.py --config backtesting/config_lightgbm_cohlv.py --stock SH600000
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

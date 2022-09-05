@@ -5,14 +5,17 @@ import qlib
 import pandas as pd
 from qlib.contrib.report import analysis_model, analysis_position
 import importlib.util
-import sys
+import argparse
 
 # usage example: 
-# python backtesting/backtest_pipeline.py backtesting/config_lightgbm_cohlv.py
+# python backtesting/backtest_pipeline.py --config backtesting/config_lightgbm_cohlv.py
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str, required=True)
+    args = parser.parse_known_args()[0]
     # load config
-    config_path = str(sys.argv[1])
+    config_path = args.config
     config_name = str(config_path.split('/')[-1].split('.')[0])
     spec = importlib.util.spec_from_file_location(config_name, config_path)
     config = importlib.util.module_from_spec(spec)  # creates a new module based on spec
@@ -76,6 +79,7 @@ if __name__ == '__main__':
     plots += result
 
     # save report to html
-    with open('report.html', 'w') as f:
+    report_name = 'report_{}.html'.format(config_name)
+    with open(report_name, 'w') as f:
         for r in plots:
             f.write(r.to_html(full_html=False, include_plotlyjs='cdn'))
