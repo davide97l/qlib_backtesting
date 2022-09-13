@@ -24,6 +24,14 @@ data_handler_config = {
             "freq": "day",
             },
         },
+    # learn_processor process the data for training
+    'learn_processors': [  # https://qlib.readthedocs.io/en/latest/component/data.html#processor
+        {"class": "ProcessInf", "kwargs": {}},
+        {"class": "CSZScoreNorm", "kwargs": {"fit_start_time": train[0], "fit_end_time": train[1]}},
+        {"class": "CSZFillna", "kwargs": {}},
+        {'class': "DropnaProcessor", "kwargs": {}},
+    ]
+    # infer_processor process the data for prediction.
 }
 task = {
     "model": {

@@ -54,7 +54,9 @@ For more information you can refer [here](https://qlib.readthedocs.io/en/latest/
 
 In order to test the effectiveness of your alphas, we have implemented a [model](../qlib/contrib/model/alphas_strategy.py) whose output is simply the value of your alphas.
 To run the pipeline with this model you can refer [here](config_singlealpha_ma_csi500.py).
-
+```
+python backtesting/backtest_pipeline.py --config backtesting/config_singlealpha_ma_csi500.py
+```
 ## Benchmark
 
 Qlib already provides to [baselines](https://qlib.readthedocs.io/en/latest/component/data.html#qlib-format-data):
