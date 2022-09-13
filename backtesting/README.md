@@ -50,6 +50,11 @@ If you need to define your personalized alphas, you can simply add the alphas' f
 ```
 For more information you can refer [here](https://qlib.readthedocs.io/en/latest/advanced/alpha.html#example).
 
+## Testing own alphas
+
+In order to test the effectiveness of your alphas, we have implemented a [model](../qlib/contrib/model/alphas_strategy.py) whose output is simply the value of your alphas.
+To run the pipeline with this model you can refer [here](config_singlealpha_ma_csi500.py).
+
 ## Benchmark
 
 Qlib already provides to [baselines](https://qlib.readthedocs.io/en/latest/component/data.html#qlib-format-data):
