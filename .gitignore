@@ -47,3 +47,5 @@ tags
 .idea/
 
 venv/
+scripts/simple
+*.html
