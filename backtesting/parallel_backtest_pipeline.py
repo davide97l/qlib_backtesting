@@ -7,7 +7,7 @@ from qlib.contrib.report import analysis_model, analysis_position
 import importlib.util
 import argparse
 import os
-from backtesting.backtest_pipeline import pipeline
+from backtest_pipeline import pipeline
 from os import listdir
 from os.path import isfile, join
 from joblib import Parallel
