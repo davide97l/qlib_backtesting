@@ -8,13 +8,13 @@ An example of configuration is defined [here](../configs/config_lightgbm_cohlv_c
 
 You can quickly run the backtesting pipeline with:
 ```
-python backtesting/backtest_pipeline.py --config configs/config_lightgbm_cohlv_csi500.py
+python backtesting/backtest_pipeline.py --config configs/config_lightgbm_cohlv_csi500.py --save_dir backtest_results
 ```
 `config_lightgbm_cohlv_csi500.py` is a simple config that leverages common trading features: CLOSE, OPEN, HIGH, LOW, OPEN, to train a LGBM model to predict the return of each stock of the `T+2` trading day.
 Backtesting is performed with a [TopkDropoutStrategy](https://qlib.readthedocs.io/en/latest/component/strategy.html#topkdropoutstrategy) using the output of LGBM to rank stocks.
 It is however possible to use different trading strategies chosen among the ones provided by [Qlib](https://qlib.readthedocs.io/en/latest/component/strategy.html) or defining your own.
 
-Once execution terminates, the pipeline will generate a report containing the backtesting results and statistics.
+Once execution terminates, the pipeline will generate a report containing the backtesting results and statistics, and save it in `save_dir`.
 You can find an example of a report [here](../backtest_results/report_lightgbm_alphas158_csi500.html).
 
 In general, you can replace `configs/your_config.py` with your own configuration.
@@ -57,6 +57,16 @@ To run the pipeline with this model you can refer [here](configs/single_alpha_co
 ```
 python backtesting/backtest_pipeline.py --config configs/single_alpha_configs/config_singlealpha_ma_csi500.py
 ```
+
+## Parallel pipeline
+
+Sometimes it may happen that you have multiple configs to backtest, as for example in the case of backtesting alpha.
+The parallel backtesting pipeline defined in `parallel_backtest_pipeline.py` allows users to run multiple configs with a single command and in a parallel way.
+```
+python backtesting/parallel_backtest_pipeline.py --config_path configs/single_alpha_configs --save_dir batch_backtest_results --njobs 2
+```
+The argument `config_path` is the path where your configs are stored, and you can define the number of parallel jobs with `njobs`.
+
 ## Benchmark
 
 Qlib already provides to [baselines](https://qlib.readthedocs.io/en/latest/component/data.html#qlib-format-data):
